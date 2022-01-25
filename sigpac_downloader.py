@@ -21,15 +21,14 @@
  *                                                                         *
  ***************************************************************************/
 """
-from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, QUrl
+from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
-from qgis.PyQt.QtWebKitWidgets import QWebView
 
 # Initialize Qt resources from file resources.py
 #from .resources import *
 # Import the code for the dialog
-from .sigpac_downloader_dialog import sigpac_downloaderDialog
+from .gui.main_window import main_window
 import os.path
 
 
@@ -188,7 +187,7 @@ class sigpac_downloader:
         # Only create GUI ONCE in callback, so that it will only load when the plugin is started
         if self.first_start == True:
             self.first_start = False
-            self.dlg = sigpac_downloaderDialog()
+            self.dlg = main_window()
 
         # show the dialog
         self.dlg.show()

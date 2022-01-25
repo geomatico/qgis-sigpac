@@ -26,17 +26,18 @@ import os
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
-from .sigpac_downloader_browser import DlgBrowserSigpac
+from .sigpac_licence_accept_browser import SigPacLicenceAcceptBrowser
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
+pluginPath = os.path.split(os.path.dirname(__file__))[0]
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'sigpac_downloader_dialog_base.ui'))
+    pluginPath, 'ui', 'main_window.ui'))
 
 
-class sigpac_downloaderDialog(QtWidgets.QDialog, FORM_CLASS):
+class main_window(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
-        super(sigpac_downloaderDialog, self).__init__(parent)
+        super(main_window, self).__init__(parent)
         # Set up the user interface from Designer through FORM_CLASS.
         # After self.setupUi() you can access any designer object by doing
         # self.<objectname>, and you can use autoconnect slots - see
@@ -47,5 +48,5 @@ class sigpac_downloaderDialog(QtWidgets.QDialog, FORM_CLASS):
         self.btnOpenBrowser.clicked.connect(self.openBrowser)
 
     def openBrowser(self):
-        browser = DlgBrowserSigpac()
+        browser = SigPacLicenceAcceptBrowser()
         browser.exec_()
