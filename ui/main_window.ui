@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>405</width>
     <height>300</height>
    </rect>
   </property>
@@ -14,7 +14,47 @@
    <string>SIGPAC Downloader</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="3" column="2">
+   <item row="3" column="0" colspan="2">
+    <widget class="QgsFileWidget" name="mQgsFileWidget" native="true"/>
+   </item>
+   <item row="7" column="0">
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>Descarga</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QComboBox" name="comboBox_province"/>
+   </item>
+   <item row="1" column="1" colspan="2">
+    <widget class="QComboBox" name="comboBox_municipality"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Carpeta de descarga</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QPushButton" name="btnOpenBrowser">
+     <property name="text">
+      <string>Accept</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1" colspan="2">
+    <widget class="QDialogButtonBox" name="btnCancel">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel</set>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -26,36 +66,6 @@
       </size>
      </property>
     </spacer>
-   </item>
-   <item row="1" column="0">
-    <widget class="QComboBox" name="comboBox"/>
-   </item>
-   <item row="0" column="2">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QPushButton" name="btnOpenBrowser">
-     <property name="text">
-      <string>Accept</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1" colspan="2">
-    <widget class="QComboBox" name="comboBox_2"/>
-   </item>
-   <item row="4" column="1" colspan="2">
-    <widget class="QDialogButtonBox" name="button_box">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
    </item>
    <item row="0" column="0">
     <spacer name="horizontalSpacer">
@@ -70,8 +80,30 @@
      </property>
     </spacer>
    </item>
-   <item row="2" column="0" colspan="2">
-    <widget class="QgsFileWidget" name="mQgsFileWidget"/>
+   <item row="8" column="0" colspan="2">
+    <widget class="QLabel" name="label_3">
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>desarrollado por www.cetemas.es y www.geomatico.es</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="label">
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -85,7 +117,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>button_box</sender>
+   <sender>btnCancel</sender>
    <signal>accepted()</signal>
    <receiver>sigpac_downloaderDialogBase</receiver>
    <slot>accept()</slot>
@@ -101,7 +133,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>button_box</sender>
+   <sender>btnCancel</sender>
    <signal>rejected()</signal>
    <receiver>sigpac_downloaderDialogBase</receiver>
    <slot>reject()</slot>

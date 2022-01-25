@@ -9,6 +9,8 @@ class SigPacLicenceAcceptBrowser(QDialog):
         super().__init__(parent)
         self.resize(800, 800)
 
+        self.cookie = ''
+
         self.url = "https://www.fega.gob.es/orig/"
 
         layout = QVBoxLayout()
@@ -27,11 +29,7 @@ class SigPacLicenceAcceptBrowser(QDialog):
 
     def network_request_done(self, request):
         if request.url().toString() == "https://www.fega.gob.es/atom/es.fega.sigpac.xml":
-            cookie = request.request().rawHeader(b'Cookie')
-
-            opener = urllib.request.build_opener()
-            opener.addheaders = [('Cookie', cookie)]
-            urllib.request.install_opener(opener)
-            file_path = os.path.join('/home/fran/Descargas/pruebas_sigpac', os.path.basename('https://www.fega.gob.es/atom/07/07011_20210104.zip'))
-            urllib.request.urlretrieve('https://www.fega.gob.es/atom/07/07011_20210104.zip', file_path)
+            self.cookie = request.request().rawHeader(b'Cookie')
+            #TODO: we should manage if everything is ok
+            self.accept()
 
