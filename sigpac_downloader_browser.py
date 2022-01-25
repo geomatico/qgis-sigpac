@@ -1,3 +1,5 @@
+import urllib
+import os
 from qgis.PyQt.QtWidgets import (QDialog, QVBoxLayout, QLabel, QDialogButtonBox, QLineEdit)
 from qgis.PyQt.QtCore import QUrl
 from qgis.PyQt.QtWebKitWidgets import QWebView
@@ -27,6 +29,12 @@ class DlgBrowserSigpac(QDialog):
         frame = self.webview.page().mainFrame()
         if self.url.toString() == "https://www.fega.gob.es/atom/es.fega.sigpac.xml":
             print(frame.toHtml())
+
+            zippath = self.dlg.lineEdit_path.text()
+            wd = os.path.join(zippath, 'downloads')
+
+            zipParcels = os.path.join(wd, "kk.zip")
+            urllib.request.urlretrieve('https://www.fega.gob.es/atom/07/07011_20210104.zip', zipParcels, self.reporthook)
 
     def setUrl(self, url):
         self.url = url
