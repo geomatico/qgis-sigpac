@@ -25,6 +25,8 @@
 import os
 import urllib
 from urllib.error import URLError
+from urllib.request import urlopen, Request
+import xml.etree.ElementTree as ET
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
@@ -55,10 +57,13 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         self.comboBox_municipality.clear()
         self.comboBox_province.addItems(listProvincias)
         self.comboBox_province.currentIndexChanged.connect(self.filter_municipality)
+        self.comboBox_province.currentIndexChanged.connect(self.download_and_parse_province_atom)
 
         self.btnOpenBrowser.clicked.connect(self.openBrowser)
 
         self.pushButton.clicked.connect(self.downloadFile)
+
+        self.gpkg_links = {}
 
     def openBrowser(self):
         self.browser = SigPacLicenceAcceptBrowser()
@@ -67,20 +72,27 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
             self.btnOpenBrowser.setStyleSheet("background-color:#00ff00;");
 
 
+    def getSelectedProvinceCod(self):
+        if self.comboBox_municipality.currentText() == '':
+            return None
+        else:
+            return self.comboBox_municipality.currentText()[0:2]
+
+    def getSelectedMunicipalityCod(self):
+        if self.comboBox_municipality.currentText() == '':
+            return None
+        else:
+            return self.comboBox_municipality.currentText()[0:5]
+
     def getDownloadUrl(self):
 
-        inecode_catastro = self.comboBox_municipality.currentText()
+        codprov = self.getSelectedMunicipalityCod()
 
-        if inecode_catastro == '':
+        if not codprov:
             return None
-        codprov = inecode_catastro[0:2]
-        codmuni = inecode_catastro[0:5]
 
-        # url = 'https://www.fega.gob.es/atom/07/07011_20210104.zip'
-        # TODO: should retrieve URL from ATOM https://www.fega.gob.es/atom/07/es.fega.sigpac.07.xml to gate proper date
-        url = u'https://www.fega.gob.es/atom/%s/%s_20210104.zip' % (
-            codprov, codmuni)
-        return url
+        if codprov in self.gpkg_links.keys():
+            return self.gpkg_links[codprov]
 
     def downloadFile(self):
 
@@ -100,10 +112,10 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
             opener.addheaders = [('Cookie', self.browser.cookie)]
             urllib.request.install_opener(opener)
             file_path = os.path.join(path, os.path.basename(url))
-            #file_path = os.path.join('/home/marti/Descargas/pruebas_sigpac', os.path.basename(url))
+
             try:
                 urllib.request.urlretrieve(url, file_path)
-                self.displayWarning('Descarga correcta')
+                self.displayWarning(f'Descarga correcta {os.path.basename(url)}')
             except URLError as e:
                 self.displayWarning('Error en la descarga', True)
 
@@ -122,7 +134,6 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         self.comboBox_municipality.currentIndexChanged.connect(self.displayWarning)
 
 
-
     def displayWarning(self, text, error=False):
         # warning: conditions not accepted
         if type(text) == str:
@@ -135,3 +146,28 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
             self.label.setStyleSheet("color: red;");
         else:
             self.label.setStyleSheet("color: black;");
+        self.label.setText(text)
+
+
+    def download_and_parse_province_atom(self):
+        codprov = self.getSelectedProvinceCod()
+
+        if codprov:
+            atom_url = f'https://www.fega.gob.es/atom/{codprov}/es.fega.sigpac.{codprov}.xml'
+            request = Request(atom_url)
+            request.add_header('Cookie', self.browser.cookie)
+            file = urlopen(request)
+            data = file.read()
+            file.close()
+
+            ns = {'atom': 'http://www.w3.org/2005/Atom',
+                  'inspire_dls': 'http://inspire.ec.europa.eu/schemas/inspire_dls/1.0'}
+            atomroot = ET.fromstring(data)
+
+            for x in atomroot.findall('atom:entry', ns):
+                cod = x.find('inspire_dls:spatial_dataset_identifier_code', ns).text.replace('es.fega.sigpac.', '')
+                links = x.findall('atom:link', ns)
+                for link in links:
+                    if link.attrib['type'] == 'application/geopackage+vnd.sqlite3':
+                        self.gpkg_links[cod] = link.attrib['href']
+
