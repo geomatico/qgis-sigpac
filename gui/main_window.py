@@ -85,22 +85,27 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
     def downloadFile(self):
 
         url = self.getDownloadUrl()
+        path = self.mQgsFileWidget.filePath()
+
         if url == None:
             self.displayWarning('Debes seleccionar provincia y municipio')
+            return
+
+        if path == '':
+            self.displayWarning('Debes seleccionar una carpeta de destino')
             return
 
         if self.browser and self.browser.cookie:
             opener = urllib.request.build_opener()
             opener.addheaders = [('Cookie', self.browser.cookie)]
             urllib.request.install_opener(opener)
-            file_path = os.path.join(self.mQgsFileWidget.filePath(),
-                                     os.path.basename(url))
+            file_path = os.path.join(path, os.path.basename(url))
             #file_path = os.path.join('/home/marti/Descargas/pruebas_sigpac', os.path.basename(url))
             try:
                 urllib.request.urlretrieve(url, file_path)
-                self.displayWarning('')
+                self.displayWarning('Descarga correcta')
             except URLError as e:
-                raise RuntimeError("Failed to download '{}'. '{}'".format(url, e.reason))
+                self.displayWarning('Error en la descarga', True)
 
         else:
             self.displayWarning('Debes aceptar las condiciones')
@@ -113,8 +118,20 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         self.comboBox_municipality.clear()
 
         self.comboBox_municipality.addItems([muni for muni in listMunicipios if muni[0:2] == filtroprovincia[0:2]])
+        self.displayWarning('')
+        self.comboBox_municipality.currentIndexChanged.connect(self.displayWarning)
 
 
-    def displayWarning(self, text):
+
+    def displayWarning(self, text, error=False):
         # warning: conditions not accepted
-        self.label.setText(text)
+        if type(text) == str:
+            self.label.setText(text)
+        else:
+            self.label.setText('')
+
+        #color
+        if error == True:
+            self.label.setStyleSheet("color: red;");
+        else:
+            self.label.setStyleSheet("color: black;");

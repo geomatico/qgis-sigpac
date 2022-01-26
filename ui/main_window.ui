@@ -88,7 +88,7 @@
    <item row="0" column="0">
     <widget class="QPushButton" name="btnOpenBrowser">
      <property name="styleSheet">
-      <string notr="true">border: 1px solid red;</string>
+      <string notr="true">border: 2px solid red;</string>
      </property>
      <property name="text">
       <string>Aceptar condiciones</string>
