@@ -1,11 +1,15 @@
+import urllib.request
+import os
 from qgis.PyQt.QtWidgets import (QDialog, QVBoxLayout, QLabel, QDialogButtonBox, QLineEdit)
 from qgis.PyQt.QtCore import QUrl
 from qgis.PyQt.QtWebKitWidgets import QWebView
 
-class DlgBrowserSigpac(QDialog):
+class SigPacLicenceAcceptBrowser(QDialog):
     def __init__(self, parent = None):
         super().__init__(parent)
         self.resize(800, 800)
+
+        self.cookie = ''
 
         self.url = "https://www.fega.gob.es/orig/"
 
@@ -14,8 +18,7 @@ class DlgBrowserSigpac(QDialog):
         # Widget para el navegador
         self.webview = QWebView(self)
         self.webview.load(QUrl(self.url))
-        self.webview.urlChanged.connect(self.setUrl)
-        self.webview.loadFinished.connect(self._result_available)
+        self.webview.page().networkAccessManager().finished.connect(self.network_request_done)
 
 
         layout.addWidget(self.webview)
@@ -23,11 +26,10 @@ class DlgBrowserSigpac(QDialog):
         self.setLayout(layout)
         self.setWindowTitle("Acepte las condiciones")
 
-    def _result_available(self, ok):
-        frame = self.webview.page().mainFrame()
-        if self.url.toString() == "https://www.fega.gob.es/atom/es.fega.sigpac.xml":
-            print(frame.toHtml())
 
-    def setUrl(self, url):
-        self.url = url
+    def network_request_done(self, request):
+        if request.url().toString() == "https://www.fega.gob.es/atom/es.fega.sigpac.xml":
+            self.cookie = request.request().rawHeader(b'Cookie')
+            #TODO: we should manage if everything is ok
+            self.accept()
 
