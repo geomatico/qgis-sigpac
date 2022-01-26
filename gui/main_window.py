@@ -62,7 +62,10 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
 
     def openBrowser(self):
         self.browser = SigPacLicenceAcceptBrowser()
-        self.browser.exec_()
+        conditionsAccepted = self.browser.exec_()
+        if conditionsAccepted == 1:
+            self.btnOpenBrowser.setStyleSheet("background-color:#00ff00;");
+
 
     def getDownloadUrl(self):
 
@@ -95,6 +98,7 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
             #file_path = os.path.join('/home/marti/Descargas/pruebas_sigpac', os.path.basename(url))
             try:
                 urllib.request.urlretrieve(url, file_path)
+                self.displayWarning('')
             except URLError as e:
                 raise RuntimeError("Failed to download '{}'. '{}'".format(url, e.reason))
 
