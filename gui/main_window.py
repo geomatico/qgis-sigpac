@@ -83,15 +83,16 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
 
         url = self.getDownloadUrl()
         if url == None:
-            self.displayWarning('Debes selccionar provincia y municipio')
+            self.displayWarning('Debes seleccionar provincia y municipio')
             return
 
         if self.browser and self.browser.cookie:
             opener = urllib.request.build_opener()
             opener.addheaders = [('Cookie', self.browser.cookie)]
             urllib.request.install_opener(opener)
-            file_path = os.path.join('/home/marti/Descargas/pruebas_sigpac',
+            file_path = os.path.join(self.mQgsFileWidget.filePath(),
                                      os.path.basename(url))
+            #file_path = os.path.join('/home/marti/Descargas/pruebas_sigpac', os.path.basename(url))
             try:
                 urllib.request.urlretrieve(url, file_path)
             except URLError as e:
