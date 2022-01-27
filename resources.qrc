@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/plugins/sigpac_downloader" >
-        <file>icon.png</file>
-    </qresource>
-</RCC>

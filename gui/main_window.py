@@ -25,6 +25,9 @@
 import os
 import urllib
 from urllib.error import URLError
+from urllib.request import urlopen, Request
+import xml.etree.ElementTree as ET
+import threading
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
@@ -53,38 +56,45 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         self.browser = None
         self.comboBox_province.clear()
         self.comboBox_municipality.clear()
-        self.comboBox_province.addItems(listProvincias)
-        self.comboBox_province.currentIndexChanged.connect(self.filter_municipality)
+        self.comboBox_province.currentIndexChanged.connect(self.download_and_parse_province_atom)
 
         self.btnOpenBrowser.clicked.connect(self.openBrowser)
 
-        self.pushButton.clicked.connect(self.downloadFile)
+        self.btnDownload.clicked.connect(self.downloadFile)
+
+        self.provinces = {}
+        self.gpkg_links = {}
 
     def openBrowser(self):
         self.browser = SigPacLicenceAcceptBrowser()
         conditionsAccepted = self.browser.exec_()
         if conditionsAccepted == 1:
-            self.btnOpenBrowser.setStyleSheet("background-color:#00ff00;");
+            self.download_and_parse_general_atom()
+            self.btnOpenBrowser.setStyleSheet("background-color:#00ff00;")
+            self.activateControls()
 
 
-    def getDownloadUrl(self):
+    def activateControls(self):
+        self.btnOpenBrowser.setEnabled(False)
+        self.comboBox_municipality.setEnabled(True)
+        self.comboBox_province.setEnabled(True)
+        self.mQgsFileWidget.setEnabled(True)
+        self.btnDownload.setEnabled(True)
 
-        inecode_catastro = self.comboBox_municipality.currentText()
 
-        if inecode_catastro == '':
-            return None
-        codprov = inecode_catastro[0:2]
-        codmuni = inecode_catastro[0:5]
+    def getSelectedProvinceLink(self):
+        if self.comboBox_province.currentText() != '':
+            return self.provinces[self.comboBox_province.currentText()]
 
-        # url = 'https://www.fega.gob.es/atom/07/07011_20210104.zip'
-        # TODO: should retrieve URL from ATOM https://www.fega.gob.es/atom/07/es.fega.sigpac.07.xml to gate proper date
-        url = u'https://www.fega.gob.es/atom/%s/%s_20210104.zip' % (
-            codprov, codmuni)
-        return url
+
+    def getSelectedMunicipalityLink(self):
+        if self.comboBox_municipality.currentText() != '':
+            return self.gpkg_links[self.comboBox_municipality.currentText()]
+
 
     def downloadFile(self):
 
-        url = self.getDownloadUrl()
+        url = self.getSelectedMunicipalityLink()
         path = self.mQgsFileWidget.filePath()
 
         if url == None:
@@ -96,14 +106,15 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
             return
 
         if self.browser and self.browser.cookie:
+            self.displayWarning(f'Descargando {os.path.basename(url)}')
             opener = urllib.request.build_opener()
             opener.addheaders = [('Cookie', self.browser.cookie)]
             urllib.request.install_opener(opener)
             file_path = os.path.join(path, os.path.basename(url))
-            #file_path = os.path.join('/home/marti/Descargas/pruebas_sigpac', os.path.basename(url))
+
             try:
                 urllib.request.urlretrieve(url, file_path)
-                self.displayWarning('Descarga correcta')
+                self.displayWarning(f'Descarga correcta {os.path.basename(url)}')
             except URLError as e:
                 self.displayWarning('Error en la descarga', True)
 
@@ -111,27 +122,80 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
             self.displayWarning('Debes aceptar las condiciones')
 
 
-    def filter_municipality(self, index):
-        """Message for fields without information"""
-
-        filtroprovincia = self.comboBox_province.currentText()
-        self.comboBox_municipality.clear()
-
-        self.comboBox_municipality.addItems([muni for muni in listMunicipios if muni[0:2] == filtroprovincia[0:2]])
-        self.displayWarning('')
-        self.comboBox_municipality.currentIndexChanged.connect(self.displayWarning)
-
-
-
     def displayWarning(self, text, error=False):
         # warning: conditions not accepted
         if type(text) == str:
-            self.label.setText(text)
+            self.lblInfo.setText(text)
         else:
-            self.label.setText('')
+            self.lblInfo.setText('')
 
         #color
         if error == True:
-            self.label.setStyleSheet("color: red;");
+            self.lblInfo.setStyleSheet("color: red;")
         else:
-            self.label.setStyleSheet("color: black;");
+            self.lblInfo.setStyleSheet("color: black;")
+
+    def download_and_parse_general_atom(self):
+
+        atom_url = f'https://www.fega.gob.es/atom/es.fega.sigpac.xml'
+        request = Request(atom_url)
+        request.add_header('Cookie', self.browser.cookie)
+        try:
+            file = urlopen(request)
+            data = file.read()
+            file.close()
+        except:
+            self.displayWarning('Error descargando el fichero atom general')
+            return
+
+        ns = {'atom': 'http://www.w3.org/2005/Atom',
+              'inspire_dls': 'http://inspire.ec.europa.eu/schemas/inspire_dls/1.0'}
+
+        try:
+            atomroot = ET.fromstring(data)
+            for x in atomroot.findall('atom:entry', ns):
+                if x.find('atom:title', ns).text != 'Tablas de códigos SIGPAC':
+                    title = x.find('atom:title', ns).text
+                    links = x.findall('atom:link', ns)
+                    for link in links:
+                        if link.attrib['rel'] == 'enclosure':
+                            self.provinces[title] = link.attrib['href']
+                            self.comboBox_province.addItem(title)
+        except:
+            self.displayWarning('Error leyendo el fichero atom general')
+            return
+
+
+    def download_and_parse_province_atom(self):
+        atom_url = self.getSelectedProvinceLink()
+        self.comboBox_municipality.clear()
+        print(atom_url)
+
+        if atom_url:
+            request = Request(atom_url)
+            request.add_header('Cookie', self.browser.cookie)
+            try:
+                file = urlopen(request)
+                data = file.read()
+                file.close()
+            except:
+                self.displayWarning('Error descargando el fichero de provincia')
+                return
+
+            ns = {'atom': 'http://www.w3.org/2005/Atom',
+                  'inspire_dls': 'http://inspire.ec.europa.eu/schemas/inspire_dls/1.0'}
+
+            try:
+                atomroot = ET.fromstring(data)
+                for x in atomroot.findall('atom:entry', ns):
+                    #cod = x.find('inspire_dls:spatial_dataset_identifier_code', ns).text.replace('es.fega.sigpac.', '')
+                    title = x.find('atom:title', ns).text
+                    links = x.findall('atom:link', ns)
+                    for link in links:
+                        if link.attrib['type'] == 'application/geopackage+vnd.sqlite3':
+                            self.gpkg_links[title] = link.attrib['href']
+                            self.comboBox_municipality.addItem(title)
+            except:
+                self.displayWarning('Error leyendo el fichero de provincia')
+                return
+
