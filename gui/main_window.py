@@ -38,11 +38,6 @@ pluginPath = os.path.split(os.path.dirname(__file__))[0]
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     pluginPath, 'ui', 'main_window.ui'))
 
-from .listamuni import *
-
-listProvincias = LISTPROV
-listMunicipios = LISTMUNI
-
 class main_window(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
