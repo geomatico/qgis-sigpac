@@ -3,6 +3,7 @@ import os
 from qgis.PyQt.QtWidgets import (QDialog, QVBoxLayout, QLabel, QDialogButtonBox, QLineEdit)
 from qgis.PyQt.QtCore import QUrl
 from qgis.PyQt.QtWebKitWidgets import QWebView
+from qgis.PyQt.QtWebKit import QWebSettings
 
 class SigPacLicenceAcceptBrowser(QDialog):
     def __init__(self, parent = None):
@@ -20,6 +21,7 @@ class SigPacLicenceAcceptBrowser(QDialog):
         self.webview.load(QUrl(self.url))
         self.webview.page().networkAccessManager().finished.connect(self.network_request_done)
 
+        self.webview.settings().setAttribute(QWebSettings.PluginsEnabled, True)
 
         layout.addWidget(self.webview)
 
