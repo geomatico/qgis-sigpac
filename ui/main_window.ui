@@ -17,7 +17,7 @@
    <item>
     <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>Es necesario aceptar las condiciones para poder realizar las descargas</string>
+      <string>Hay que aceptar las &lt;a href='https://www.fega.gob.es/orig/pdfs/20201215_Licencia_SIGPAC_Servicio_Descarga.pdf' target='_blank'&gt;condiciones&lt;/a&gt; para poder realizar las descargas</string>
      </property>
     </widget>
    </item>
