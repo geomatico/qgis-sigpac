@@ -57,6 +57,9 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
 
         self.btnDownload.clicked.connect(self.downloadFile)
 
+        self.providerLabel.setOpenExternalLinks(True)
+        self.conditionsLabel.setOpenExternalLinks(True)
+
         self.provinces = {}
         self.gpkg_links = {}
 
