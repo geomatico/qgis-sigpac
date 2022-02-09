@@ -110,7 +110,7 @@
       </font>
      </property>
      <property name="text">
-      <string>desarrollado por &lt;a href='www.cetemas.es'&gt;www.cetemas.es&lt;/a&gt; y &lt;a href='www.geomatico.es'&gt;www.geomatico.es&lt;/a&gt;</string>
+      <string>desarrollado por &lt;a href='http://www.cetemas.es' target='_blank'&gt;www.cetemas.es&lt;/a&gt; y &lt;a href='https://www.geomatico.es' target='_blank'&gt;www.geomatico.es&lt;/a&gt;</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
