@@ -15,9 +15,9 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label_3">
+    <widget class="QLabel" name="conditionsLabel">
      <property name="text">
-      <string>Es necesario aceptar las condiciones para poder realizar las descargas</string>
+      <string>Hay que aceptar las &lt;a href='https://www.fega.gob.es/orig/pdfs/20201215_Licencia_SIGPAC_Servicio_Descarga.pdf' target='_blank'&gt;condiciones&lt;/a&gt; para poder realizar las descargas</string>
      </property>
     </widget>
    </item>
@@ -110,7 +110,7 @@
       </font>
      </property>
      <property name="text">
-      <string>desarrollado por &lt;a href='www.cetemas.es'&gt;www.cetemas.es&lt;/a&gt; y &lt;a href='www.geomatico.es'&gt;www.geomatico.es&lt;/a&gt;</string>
+      <string>desarrollado por &lt;a href='http://www.cetemas.es' target='_blank'&gt;www.cetemas.es&lt;/a&gt; y &lt;a href='https://www.geomatico.es' target='_blank'&gt;www.geomatico.es&lt;/a&gt;</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
