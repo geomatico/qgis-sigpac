@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>521</width>
-    <height>407</height>
+    <height>422</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,20 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QLabel" name="conditionsLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
      <property name="text">
-      <string>Hay que aceptar las &lt;a href='https://www.fega.gob.es/orig/pdfs/20201215_Licencia_SIGPAC_Servicio_Descarga.pdf' target='_blank'&gt;condiciones&lt;/a&gt; para poder realizar las descargas</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hay que aceptar las condiciones para poder realizar las descargas. &lt;/p&gt;&lt;p&gt;Puede consultarlas &lt;a href=&quot;https://www.fega.gob.es/orig/pdfs/20201215_Licencia_SIGPAC_Servicio_Descarga.pdf&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;aqui&lt;/span&gt;&lt;/a&gt; y aceptarlas pulsando el siguiente botón: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
      </property>
     </widget>
    </item>
@@ -40,6 +52,20 @@
    </item>
    <item>
     <widget class="QComboBox" name="comboBox_municipality">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Ficheros disponibles para el municipio seleccionado</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QComboBox" name="comboBox_files">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -79,6 +105,16 @@
     <widget class="QLabel" name="lblInfo">
      <property name="text">
       <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QProgressBar" name="progressBar">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="value">
+      <number>0</number>
      </property>
     </widget>
    </item>
