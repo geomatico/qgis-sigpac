@@ -52,6 +52,7 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         self.comboBox_province.clear()
         self.comboBox_municipality.clear()
         self.comboBox_province.currentIndexChanged.connect(self.download_and_parse_province_atom)
+        self.comboBox_municipality.currentIndexChanged.connect(self.update_file_options_for_municipality)
 
         self.btnOpenBrowser.clicked.connect(self.openBrowser)
 
@@ -61,7 +62,7 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         self.conditionsLabel.setOpenExternalLinks(True)
 
         self.provinces = {}
-        self.gpkg_links = {}
+        self.links = {}
 
     def openBrowser(self):
         self.browser = SigPacLicenceAcceptBrowser()
@@ -69,6 +70,7 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         if conditionsAccepted == 1:
             self.download_and_parse_general_atom()
             self.btnOpenBrowser.setStyleSheet("background-color:#00ff00;")
+            self.btnOpenBrowser.setText('Condiciones Aceptadas')
             self.activateControls()
 
 
@@ -76,6 +78,7 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         self.btnOpenBrowser.setEnabled(False)
         self.comboBox_municipality.setEnabled(True)
         self.comboBox_province.setEnabled(True)
+        self.comboBox_files.setEnabled(True)
         self.mQgsFileWidget.setEnabled(True)
         self.btnDownload.setEnabled(True)
 
@@ -84,16 +87,18 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         if self.comboBox_province.currentText() != '':
             return self.provinces[self.comboBox_province.currentText()]
 
-
-    def getSelectedMunicipalityLink(self):
-        if self.comboBox_municipality.currentText() != '':
-            return self.gpkg_links[self.comboBox_municipality.currentText()]
+    def getSelectedMunicipalityFileLink(self):
+        municipality = self.comboBox_municipality.currentText()
+        file = self.comboBox_files.currentText()
+        if municipality != '':
+            if file != '':
+                return self.links[municipality][file]
 
 
     def downloadFile(self):
 
-        url = self.getSelectedMunicipalityLink()
         path = self.mQgsFileWidget.filePath()
+        url = self.getSelectedMunicipalityFileLink()
 
         if url == None:
             self.displayWarning('Debes seleccionar provincia y municipio')
@@ -110,14 +115,23 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
             urllib.request.install_opener(opener)
             file_path = os.path.join(path, os.path.basename(url))
 
+            self.displayWarning(f'Descargando...')
+            self.progressBar.setEnabled(True)
             try:
-                urllib.request.urlretrieve(url, file_path)
+                urllib.request.urlretrieve(url, file_path, self.updateProgress)
                 self.displayWarning(f'Descarga correcta {os.path.basename(url)}')
             except URLError as e:
                 self.displayWarning('Error en la descarga', True)
-
+            self.progressBar.setEnabled(False)
         else:
             self.displayWarning('Debes aceptar las condiciones')
+
+
+    def updateProgress(self, block_num, block_size, total_size):
+        self.progressBar.setMaximum(total_size)
+        downloaded = block_num * block_size
+        if downloaded < total_size:
+            self.progressBar.setValue(downloaded)
 
 
     def displayWarning(self, text, error=False):
@@ -152,13 +166,13 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         try:
             atomroot = ET.fromstring(data)
             for x in atomroot.findall('atom:entry', ns):
-                if x.find('atom:title', ns).text != 'Tablas de códigos SIGPAC':
-                    title = x.find('atom:title', ns).text
-                    links = x.findall('atom:link', ns)
-                    for link in links:
-                        if link.attrib['rel'] == 'enclosure':
-                            self.provinces[title] = link.attrib['href']
-                            self.comboBox_province.addItem(title)
+                #if x.find('atom:title', ns).text != 'Tablas de códigos SIGPAC':
+                title = x.find('atom:title', ns).text
+                links = x.findall('atom:link', ns)
+                for link in links:
+                    if link.attrib['rel'] == 'enclosure' and link.attrib['type'] == 'application/atom+xml':
+                        self.provinces[title] = link.attrib['href']
+                        self.comboBox_province.addItem(title)
         except:
             self.displayWarning('Error leyendo el fichero atom general')
             return
@@ -167,7 +181,6 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
     def download_and_parse_province_atom(self):
         atom_url = self.getSelectedProvinceLink()
         self.comboBox_municipality.clear()
-        print(atom_url)
 
         if atom_url:
             request = Request(atom_url)
@@ -189,11 +202,28 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
                     #cod = x.find('inspire_dls:spatial_dataset_identifier_code', ns).text.replace('es.fega.sigpac.', '')
                     title = x.find('atom:title', ns).text
                     links = x.findall('atom:link', ns)
+                    download_links = {}
                     for link in links:
-                        if link.attrib['type'] == 'application/geopackage+vnd.sqlite3':
-                            self.gpkg_links[title] = link.attrib['href']
-                            self.comboBox_municipality.addItem(title)
+                        if link.attrib['rel'] == 'enclosure':
+                            url = link.attrib['href']
+                            file_type_text = 'GeoPackage' if link.attrib['type'] == 'application/geopackage+vnd.sqlite3' else \
+                                'Shapefile' if link.attrib['type'] == 'application/x-shapefile' else \
+                                'Otro'
+                            file_title = f'{file_type_text}: {os.path.basename(url)} '
+                            download_links[file_title] = url
+                        if len(download_links.keys()):
+                            self.links[title] = download_links
+                    self.comboBox_municipality.addItem(title)
             except:
                 self.displayWarning('Error leyendo el fichero de provincia')
                 return
+
+    def update_file_options_for_municipality(self):
+        self.comboBox_files.clear()
+        municipality = self.comboBox_municipality.currentText()
+        if municipality:
+            for file_title in self.links[municipality].keys():
+                self.comboBox_files.addItem(file_title)
+
+
 

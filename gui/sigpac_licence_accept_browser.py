@@ -4,7 +4,10 @@ from qgis.PyQt.QtWidgets import (QDialog, QVBoxLayout, QLabel, QDialogButtonBox,
 from qgis.PyQt.QtCore import QUrl
 from qgis.PyQt.QtWebKitWidgets import QWebView
 from qgis.PyQt.QtWebKit import QWebSettings
+from urllib.request import urlopen, Request
 
+# import sys
+# from PyQt5.QtWidgets import QApplication
 
 class SigPacLicenceAcceptBrowser(QDialog):
     def __init__(self, parent = None):
@@ -22,10 +25,12 @@ class SigPacLicenceAcceptBrowser(QDialog):
         # Widget para el navegador
         self.webview = QWebView(self)
         self.webview.page().networkAccessManager().finished.connect(self.network_request_done)
-        self.webview.loadStarted.connect(self.loaded)
+        #self.webview.loadStarted.connect(self.loaded)
+
+        webSettings = self.webview.settings()
+        webSettings.clearMemoryCaches()
 
         self.webview.settings().setAttribute(QWebSettings.PluginsEnabled, True)
-        self.webview.settings().setAttribute(QWebSettings.JavascriptEnabled, True)
         self.webview.load(QUrl(self.url))
 
         layout.addWidget(self.webview)
@@ -34,14 +39,7 @@ class SigPacLicenceAcceptBrowser(QDialog):
         self.setWindowTitle("Acepte las condiciones")
 
 
-    def network_request_done(self, request):
-        if request.url().toString() == "https://www.fega.gob.es/atom/es.fega.sigpac.xml":
-            self.cookie = request.request().rawHeader(b'Cookie')
-            #TODO: we should manage if everything is ok
+    def network_request_done(self, reply):
+        if reply.url().toString() == 'https://www.fega.gob.es/atom/es.fega.sigpac.xml':
+            self.cookie = reply.request().rawHeader(b'Cookie')
             self.accept()
-
-    def loaded(self):
-        js = "viewer = document.querySelector(\"embed\"); newItem = document.createElement('iframe'); newItem.width = \"100%\"; newItem.height = \"600px\"; newItem.src = `https://docs.google.com/viewer?url=${viewer.src}&embedded=true`; viewer.parentNode.replaceChild(newItem, viewer);"
-
-        self.webview.page().currentFrame().evaluateJavaScript(js)
-
