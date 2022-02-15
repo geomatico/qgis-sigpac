@@ -26,7 +26,7 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hay que aceptar las condiciones para poder realizar las descargas. &lt;/p&gt;&lt;p&gt;Puede consultarlas &lt;a href=&quot;https://www.fega.gob.es/orig/pdfs/20201215_Licencia_SIGPAC_Servicio_Descarga.pdf&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;aqui&lt;/span&gt;&lt;/a&gt; y aceptarlas pulsando el siguiente botón: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hay que aceptar las condiciones para poder realizar las descargas. &lt;/p&gt;&lt;p&gt;Si no puede visualizar correctamente las condiciones pulse &lt;a href=&quot;https://www.fega.gob.es/orig/pdfs/20201215_Licencia_SIGPAC_Servicio_Descarga.pdf&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;aquí.&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="textFormat">
       <enum>Qt::AutoText</enum>
@@ -60,7 +60,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Ficheros disponibles para el municipio seleccionado</string>
+      <string>Ficheros del municipio seleccionado, por años y formatos</string>
      </property>
     </widget>
    </item>
