@@ -60,6 +60,7 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
 
         self.providerLabel.setOpenExternalLinks(True)
         self.conditionsLabel.setOpenExternalLinks(True)
+        self.label.setOpenExternalLinks(True)
 
         self.provinces = {}
         self.links = {}

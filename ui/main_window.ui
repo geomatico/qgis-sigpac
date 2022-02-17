@@ -60,7 +60,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Ficheros del municipio seleccionado, por años y formatos</string>
+      <string>Ficheros del municipio seleccionado, por años y formatos (&lt;a href='https://www.fega.gob.es/orig/pdfs/202201_Informacion_servicio_descargas_SIGPAC.pdf' target='_blank'&gt;estructura&lt;/a&gt;)</string>
      </property>
     </widget>
    </item>
