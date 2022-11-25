@@ -26,20 +26,10 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hay que aceptar las condiciones para poder realizar las descargas. &lt;/p&gt;&lt;p&gt;Si no puede visualizar correctamente las condiciones pulse &lt;a href=&quot;https://www.fega.gob.es/orig/pdfs/20201215_Licencia_SIGPAC_Servicio_Descarga.pdf&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;aquí.&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Puede visualizar las condiciones del servicio &lt;a href=&quot;https://www.fega.gob.es/orig/pdfs/20201215_Licencia_SIGPAC_Servicio_Descarga.pdf&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;aquí.&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="textFormat">
       <enum>Qt::AutoText</enum>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="btnOpenBrowser">
-     <property name="styleSheet">
-      <string notr="true">border: 2px solid red;</string>
-     </property>
-     <property name="text">
-      <string>Aceptar condiciones</string>
      </property>
     </widget>
    </item>
@@ -79,12 +69,9 @@
     </widget>
    </item>
    <item>
-    <widget class="QgsFileWidget" name="mQgsFileWidget">
+    <widget class="QgsFileWidget" name="mQgsFileWidget" native="true">
      <property name="enabled">
       <bool>false</bool>
-     </property>
-     <property name="storageMode">
-      <enum>QgsFileWidget::GetDirectory</enum>
      </property>
     </widget>
    </item>
