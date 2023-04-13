@@ -23,14 +23,16 @@
 """
 
 import os
+import sys
 import urllib
+import re
 from urllib.error import URLError
 from urllib.request import urlopen, Request
 import xml.etree.ElementTree as ET
-import threading
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
+from qgis.PyQt.QtCore import pyqtSignal
 from .sigpac_licence_accept_browser import SigPacLicenceAcceptBrowser
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
@@ -39,6 +41,8 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
     pluginPath, 'ui', 'main_window.ui'))
 
 class main_window(QtWidgets.QDialog, FORM_CLASS):
+    cookieReceived = pyqtSignal()
+
     def __init__(self, parent=None):
         """Constructor."""
         super(main_window, self).__init__(parent)
@@ -54,7 +58,7 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         self.comboBox_province.currentIndexChanged.connect(self.download_and_parse_province_atom)
         self.comboBox_municipality.currentIndexChanged.connect(self.update_file_options_for_municipality)
 
-        self.btnOpenBrowser.clicked.connect(self.openBrowser)
+        # self.btnOpenBrowser.clicked.connect(self.openBrowser)
 
         self.btnDownload.clicked.connect(self.downloadFile)
 
@@ -65,18 +69,49 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         self.provinces = {}
         self.links = {}
 
-    def openBrowser(self):
-        self.browser = SigPacLicenceAcceptBrowser()
-        conditionsAccepted = self.browser.exec_()
-        if conditionsAccepted == 1:
-            self.download_and_parse_general_atom()
-            self.btnOpenBrowser.setStyleSheet("background-color:#00ff00;")
-            self.btnOpenBrowser.setText('Condiciones Aceptadas')
-            self.activateControls()
+        # self.cookie = "fegaatomcook=kswWWDdkdwd922swSSWss9; path=/"
+        self.cookie = None
 
+        self.cookieReceived.connect(self.download_and_parse_general_atom)
+        self.cookieReceived.connect(self.activateControls)
+
+        self.getCookie()
+
+
+
+    def getCookie(self):
+        fega_url = f'https://www.fega.gob.es/orig/'
+        request = Request(fega_url)
+        try:
+            file = urlopen(request)
+            data = file.read()
+            file.close()
+        except:
+            self.displayWarning('Error obteniendo la cookie.')
+            return
+
+        m = re.search('(?<=document.cookie = ).*(?=location.assign)', str(data))
+        self.cookie = m.group(0).split(";\\r\\n")[0].replace('"', '')
+        self.cookieReceived.emit()
+
+    # def openBrowser(self):
+    #     try:
+    #         self.browser = SigPacLicenceAcceptBrowser()
+    #         self.browser.conditionsAccepted.connect(self.onConditionsAccepted)
+    #         self.browser.exec_()
+    #     except:
+    #         self.broser.accept()
+    #         QtWidgets.QMessageBox.warning(self, "Parece que hay un problema con la web https://www.fega.gob.es/orig/")
+
+
+    # def onConditionsAccepted(self, cookie):
+    #     self.download_and_parse_general_atom(cookie)
+    #     self.btnOpenBrowser.setStyleSheet("background-color:#00ff00;")
+    #     self.btnOpenBrowser.setText('Condiciones Aceptadas')
+    #     self.activateControls()
 
     def activateControls(self):
-        self.btnOpenBrowser.setEnabled(False)
+        # self.btnOpenBrowser.setEnabled(False)
         self.comboBox_municipality.setEnabled(True)
         self.comboBox_province.setEnabled(True)
         self.comboBox_files.setEnabled(True)
@@ -109,10 +144,10 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
             self.displayWarning('Debes seleccionar una carpeta de destino')
             return
 
-        if self.browser and self.browser.cookie:
+        if self.cookie:
             self.displayWarning(f'Descargando {os.path.basename(url)}')
             opener = urllib.request.build_opener()
-            opener.addheaders = [('Cookie', self.browser.cookie)]
+            opener.addheaders = [('Cookie', self.cookie)]
             urllib.request.install_opener(opener)
             file_path = os.path.join(path, os.path.basename(url))
 
@@ -152,7 +187,7 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
 
         atom_url = f'https://www.fega.gob.es/atom/es.fega.sigpac.xml'
         request = Request(atom_url)
-        request.add_header('Cookie', self.browser.cookie)
+        request.add_header('Cookie', self.cookie)
         try:
             file = urlopen(request)
             data = file.read()
@@ -185,7 +220,7 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
 
         if atom_url:
             request = Request(atom_url)
-            request.add_header('Cookie', self.browser.cookie)
+            request.add_header('Cookie', self.cookie)
             try:
                 file = urlopen(request)
                 data = file.read()
@@ -227,4 +262,7 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
                 self.comboBox_files.addItem(file_title)
 
 
-
+# app = QtWidgets.QApplication(sys.argv)
+# dialog = main_window()
+# dialog.show()
+# app.exec_()
