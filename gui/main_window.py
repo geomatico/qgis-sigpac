@@ -23,6 +23,8 @@
 """
 
 import os
+import shutil
+import subprocess
 import sys
 import urllib
 import re
@@ -33,7 +35,6 @@ import xml.etree.ElementTree as ET
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
 from qgis.PyQt.QtCore import pyqtSignal
-from .sigpac_licence_accept_browser import SigPacLicenceAcceptBrowser
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 pluginPath = os.path.split(os.path.dirname(__file__))[0]
@@ -57,10 +58,13 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         self.comboBox_municipality.clear()
         self.comboBox_province.currentIndexChanged.connect(self.download_and_parse_province_atom)
         self.comboBox_municipality.currentIndexChanged.connect(self.update_file_options_for_municipality)
+        self.checkBox_download_province.toggled.connect(self.activate_massive_download)
+
+        self.progressBar_massive.hide()
 
         # self.btnOpenBrowser.clicked.connect(self.openBrowser)
 
-        self.btnDownload.clicked.connect(self.downloadFile)
+        self.btnDownload.clicked.connect(self.download)
 
         self.providerLabel.setOpenExternalLinks(True)
         self.conditionsLabel.setOpenExternalLinks(True)
@@ -114,6 +118,7 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         # self.btnOpenBrowser.setEnabled(False)
         self.comboBox_municipality.setEnabled(True)
         self.comboBox_province.setEnabled(True)
+        self.checkBox_download_province.setEnabled(True)
         self.comboBox_files.setEnabled(True)
         self.mQgsFileWidget.setEnabled(True)
         self.btnDownload.setEnabled(True)
@@ -130,6 +135,57 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
             if file != '':
                 return self.links[municipality][file]
 
+    def download(self):
+        if self.checkBox_download_province.isChecked():
+            self.download_massive()
+        else:
+            self.downloadFile()
+
+    def download_massive(self):
+
+        path = self.mQgsFileWidget.filePath()
+        if path == '':
+            self.displayWarning('Debes seleccionar una carpeta de destino')
+            return
+
+        self.progressBar.setEnabled(True)
+        self.progressBar_massive.show()
+        self.progressBar_massive.setEnabled(True)
+        count = 0
+        total = len(list(self.links.keys()))
+        for a in self.links:
+            count = count + 1
+            self.update_massive_progress(count, total)
+            url = list(self.links[a].values())[0]
+            self.displayWarning(f'Descargando {os.path.basename(url)}')
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('Cookie', self.cookie)]
+            urllib.request.install_opener(opener)
+            file_path = os.path.join(path, os.path.basename(url))
+
+            self.displayWarning(f'Descargando...')
+
+            try:
+                urllib.request.urlretrieve(url, file_path, self.updateProgress)
+                shutil.unpack_archive(file_path, path)
+                os.remove(file_path)
+                self.displayWarning(f'Descarga correcta {os.path.basename(url)}')
+            except URLError as e:
+                self.displayWarning('Error en la descarga', True)
+
+        self.displayWarning(f'Creando output.gpkg')
+        count = 0
+        total = len(os.listdir(path))
+        for gpkg in os.listdir(path):
+            count = count + 1
+            self.update_massive_progress(count, total)
+            ogr_cmd = """ogr2ogr -update -append -f GPKG {} {}""" \
+                .format(os.path.join(path, 'output.gpkg'), os.path.join(path, gpkg))
+            subprocess.run(ogr_cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        self.displayWarning(f'Finalizado.')
+        self.progressBar.setEnabled(False)
+        self.progressBar_massive.setEnabled(False)
 
     def downloadFile(self):
 
@@ -151,7 +207,7 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
             urllib.request.install_opener(opener)
             file_path = os.path.join(path, os.path.basename(url))
 
-            self.displayWarning(f'Descargando...')
+            self.displayWarning(f'Descargando {os.path.basename(url)}')
             self.progressBar.setEnabled(True)
             try:
                 urllib.request.urlretrieve(url, file_path, self.updateProgress)
@@ -166,8 +222,12 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
     def updateProgress(self, block_num, block_size, total_size):
         self.progressBar.setMaximum(total_size)
         downloaded = block_num * block_size
-        if downloaded < total_size:
+        if downloaded <= total_size:
             self.progressBar.setValue(downloaded)
+
+    def update_massive_progress(self, completed, total):
+        self.progressBar_massive.setMaximum(total)
+        self.progressBar_massive.setValue(completed)
 
 
     def displayWarning(self, text, error=False):
@@ -217,6 +277,7 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
     def download_and_parse_province_atom(self):
         atom_url = self.getSelectedProvinceLink()
         self.comboBox_municipality.clear()
+        self.links = {}
 
         if atom_url:
             request = Request(atom_url)
@@ -260,6 +321,17 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         if municipality:
             for file_title in self.links[municipality].keys():
                 self.comboBox_files.addItem(file_title)
+
+    def activate_massive_download(self):
+        if self.checkBox_download_province.isChecked():
+            self.comboBox_municipality.setEnabled(False)
+            self.comboBox_files.setEnabled(False)
+            self.progressBar_massive.show()
+        else:
+            self.download_and_parse_province_atom()
+            self.progressBar_massive.hide()
+            self.activateControls()
+
 
 
 # app = QtWidgets.QApplication(sys.argv)
