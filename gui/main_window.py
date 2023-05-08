@@ -28,6 +28,7 @@ import subprocess
 import sys
 import urllib
 import re
+import ssl
 from urllib.error import URLError
 from urllib.request import urlopen, Request
 import xml.etree.ElementTree as ET
@@ -81,16 +82,22 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
 
         self.getCookie()
 
+    def getUnsecureContext(self):
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+
+        return ctx
 
 
     def getCookie(self):
-        fega_url = f'https://www.fega.gob.es/orig/'
-        request = Request(fega_url)
+        fega_url = f'https://www.fega.gob.es/orig'
+
         try:
-            file = urlopen(request)
-            data = file.read()
-            file.close()
-        except:
+            with urllib.request.urlopen(fega_url, context=self.getUnsecureContext()) as response:
+                data = response.read()
+        except Exception as e:
+            print(e.__str__())
             self.displayWarning('Error obteniendo la cookie.')
             return
 
@@ -166,7 +173,10 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
             self.displayWarning(f'Descargando...')
 
             try:
+                backup_ssl_context = ssl._create_default_https_context
+                ssl._create_default_https_context = ssl._create_unverified_context
                 urllib.request.urlretrieve(url, file_path, self.updateProgress)
+                ssl._create_default_https_context = backup_ssl_context
                 shutil.unpack_archive(file_path, path)
                 os.remove(file_path)
                 self.displayWarning(f'Descarga correcta {os.path.basename(url)}')
@@ -210,7 +220,10 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
             self.displayWarning(f'Descargando {os.path.basename(url)}')
             self.progressBar.setEnabled(True)
             try:
+                backup_ssl_context = ssl._create_default_https_context
+                ssl._create_default_https_context = ssl._create_unverified_context
                 urllib.request.urlretrieve(url, file_path, self.updateProgress)
+                ssl._create_default_https_context = backup_ssl_context
                 self.displayWarning(f'Descarga correcta {os.path.basename(url)}')
             except URLError as e:
                 self.displayWarning('Error en la descarga', True)
@@ -224,6 +237,8 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
         downloaded = block_num * block_size
         if downloaded <= total_size:
             self.progressBar.setValue(downloaded)
+        else:
+            self.progressBar.setValue(total_size)
 
     def update_massive_progress(self, completed, total):
         self.progressBar_massive.setMaximum(total)
@@ -246,13 +261,14 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
     def download_and_parse_general_atom(self):
 
         atom_url = f'https://www.fega.gob.es/atom/es.fega.sigpac.xml'
+
         request = Request(atom_url)
         request.add_header('Cookie', self.cookie)
         try:
-            file = urlopen(request)
+            file = urlopen(request, context=self.getUnsecureContext())
             data = file.read()
             file.close()
-        except:
+        except Exception as e:
             self.displayWarning('Error descargando el fichero atom general')
             return
 
@@ -283,10 +299,10 @@ class main_window(QtWidgets.QDialog, FORM_CLASS):
             request = Request(atom_url)
             request.add_header('Cookie', self.cookie)
             try:
-                file = urlopen(request)
+                file = urlopen(request, context=self.getUnsecureContext())
                 data = file.read()
                 file.close()
-            except:
+            except Exception as e:
                 self.displayWarning('Error descargando el fichero de provincia')
                 return
 
