@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:georss="http://www.georss.org/georss"
+    xmlns:inspire_dls="http://inspire.ec.europa.eu/schemas/inspire_dls/1.0"
+    xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
+    xsi:schemaLocation="http://www.w3.org/2005/Atom http://inspire-geoportal.ec.europa.eu/schemas/inspire/atom/1.0/atom.xsd http://inspire.ec.europa.eu/schemas/inspire_dls/1.0 http://inspire.ec.europa.eu/schemas/inspire_dls/1.0/inspire_dls.xsd http://inspire.ec.europa.eu/schemas/common/1.0 http://inspire.ec.europa.eu/schemas/common/1.0/common.xsd"
+    xml:lang="es">
+
+  <title>Servicio de descarga Atom del FEGA</title>
+  <subtitle>Conjuntos de datos disponibles.</subtitle>
+  <rights>Este servicio se puede usar de modo libre y gratuito en cualquier caso, siempre que se mencione al Fondo Español de Garantía Agraria (FEGA) como autor y propietario de la información.</rights>
+  <author>
+    <name>Fondo Español de Garantía Agraria (FEGA)</name>
+    <uri>https://www.fega.gob.es/</uri>
+    <email>unidad-de-apoyo@fega.es</email>
+  </author>
+
+  <id>https://www.fega.gob.es/atom/es.fega.sigpac.xml</id>
+  <link rel="self" type="application/atom+xml" title="Este documento" href="https://www.fega.gob.es/atom/es.fega.sigpac.xml" hreflang="es"/>
+  <link rel="describedby" type="application/xml" title="Metadatos del servicio de descarga" href="https://www.mapama.gob.es/ide/metadatos/srv/api/records/4c28dd6f-0dd7-4614-a2bd-ef9d51500785/formatters/xml"/>
+  <link rel="search" type="application/opensearchdescription+xml" title="Descripción OpenSearch" href="https://www.fega.gob.es/atom/osd.xml" hreflang="es"/>
+  <updated>2025-02-05T23:11:33.8787260+01:00</updated>
+
+  <entry>
+    <title>Recintos SIGPAC de 2025</title>
+    <id>https://www.fega.gob.es/atom/es.fega.sigpac.rec.2025.xml</id>
+    <updated>2025-02-05T10:24:53.6730758+01:00</updated>
+    <inspire_dls:spatial_dataset_identifier_namespace>es.fega.sigpac</inspire_dls:spatial_dataset_identifier_namespace>
+    <inspire_dls:spatial_dataset_identifier_code>rec.2025</inspire_dls:spatial_dataset_identifier_code>
+    <link rel="describedby" type="application/xml" href="https://www.mapa.gob.es/ide/metadatos/srv/api/records/52f538b0-95b6-439b-af1d-816763877366/formatters/xml"/>
+    <link rel="enclosure" type="application/atom+xml" title="Recintos SIGPAC de 2025" href="https://www.fega.gob.es/atom/es.fega.sigpac.rec.2025.xml" hreflang="es"/>
+    <link rel="alternate" type="application/atom+xml" title="Recintos SIGPAC de 2025" href="https://www.fega.gob.es/atom/es.fega.sigpac.rec.2025.xml" hreflang="es"/>
+    <georss:polygon>-19 27 -19 44 5 44 5 27 -19 27</georss:polygon>
+    <category term="EPSG:4258" scheme="http://www.opengis.net/def/crs/EPSG/0/4258" label="ETRS89"/>
+  </entry>
+  <entry>
+    <title>Elementos del paisaje SIGPAC de 2025</title>
+    <id>https://www.fega.gob.es/atom/es.fega.sigpac.ep.2025.xml</id>
+    <updated>2025-02-05T10:24:53.6730758+01:00</updated>
+    <inspire_dls:spatial_dataset_identifier_namespace>es.fega.sigpac</inspire_dls:spatial_dataset_identifier_namespace>
+    <inspire_dls:spatial_dataset_identifier_code>ep.2025</inspire_dls:spatial_dataset_identifier_code>
+    <link rel="describedby" type="application/xml" href="https://www.mapa.gob.es/ide/metadatos/srv/api/records/af7aeed6-cd6c-4456-92ff-d1026c60a27e/formatters/xml"/>
+    <link rel="enclosure" type="application/atom+xml" title="Elementos del paisaje SIGPAC de 2025" href="https://www.fega.gob.es/atom/es.fega.sigpac.ep.2025.xml" hreflang="es"/>
+    <link rel="alternate" type="application/atom+xml" title="Elementos del paisaje SIGPAC de 2025" href="https://www.fega.gob.es/atom/es.fega.sigpac.ep.2025.xml" hreflang="es"/>
+    <georss:polygon>-19 27 -19 44 5 44 5 27 -19 27</georss:polygon>
+    <category term="EPSG:4258" scheme="http://www.opengis.net/def/crs/EPSG/0/4258" label="ETRS89"/>
+  </entry>
+  <entry>
+    <title>Recintos SIGPAC de 2024</title>
+    <id>https://www.fega.gob.es/atom/es.fega.sigpac.rec.2024.xml</id>
+    <updated>2025-02-05T23:11:33.8787260+01:00</updated>
+    <inspire_dls:spatial_dataset_identifier_namespace>es.fega.sigpac</inspire_dls:spatial_dataset_identifier_namespace>
+    <inspire_dls:spatial_dataset_identifier_code>rec.2024</inspire_dls:spatial_dataset_identifier_code>
+    <link rel="describedby" type="application/xml" href="https://www.mapa.gob.es/ide/metadatos/srv/api/records/52f538b0-95b6-439b-af1d-816763877366/formatters/xml"/>
+    <link rel="enclosure" type="application/atom+xml" title="Recintos SIGPAC de 2024" href="https://www.fega.gob.es/atom/es.fega.sigpac.rec.2024.xml" hreflang="es"/>
+    <link rel="alternate" type="application/atom+xml" title="Recintos SIGPAC de 2024" href="https://www.fega.gob.es/atom/es.fega.sigpac.rec.2024.xml" hreflang="es"/>
+    <georss:polygon>-19 27 -19 44 5 44 5 27 -19 27</georss:polygon>
+    <category term="EPSG:4258" scheme="http://www.opengis.net/def/crs/EPSG/0/4258" label="ETRS89"/>
+  </entry>
+  <entry>
+    <title>Elementos del paisaje SIGPAC de 2024</title>
+    <id>https://www.fega.gob.es/atom/es.fega.sigpac.ep.2024.xml</id>
+    <updated>2025-02-05T23:11:33.8787260+01:00</updated>
+    <inspire_dls:spatial_dataset_identifier_namespace>es.fega.sigpac</inspire_dls:spatial_dataset_identifier_namespace>
+    <inspire_dls:spatial_dataset_identifier_code>ep.2024</inspire_dls:spatial_dataset_identifier_code>
+    <link rel="describedby" type="application/xml" href="https://www.mapa.gob.es/ide/metadatos/srv/api/records/af7aeed6-cd6c-4456-92ff-d1026c60a27e/formatters/xml"/>
+    <link rel="enclosure" type="application/atom+xml" title="Elementos del paisaje SIGPAC de 2024" href="https://www.fega.gob.es/atom/es.fega.sigpac.ep.2024.xml" hreflang="es"/>
+    <link rel="alternate" type="application/atom+xml" title="Elementos del paisaje SIGPAC de 2024" href="https://www.fega.gob.es/atom/es.fega.sigpac.ep.2024.xml" hreflang="es"/>
+    <georss:polygon>-19 27 -19 44 5 44 5 27 -19 27</georss:polygon>
+    <category term="EPSG:4258" scheme="http://www.opengis.net/def/crs/EPSG/0/4258" label="ETRS89"/>
+  </entry>
+  <entry>
+    <title>Líneas de declaración SIGC de 2024</title>
+    <id>https://www.fega.gob.es/atom/es.fega.sigpac.ld.2024.xml</id>
+    <updated>2025-02-05T23:11:33.8787260+01:00</updated>
+    <inspire_dls:spatial_dataset_identifier_namespace>es.fega.sigpac</inspire_dls:spatial_dataset_identifier_namespace>
+    <inspire_dls:spatial_dataset_identifier_code>ld.2024</inspire_dls:spatial_dataset_identifier_code>
+    <link rel="describedby" type="application/xml" href="https://www.mapa.gob.es/ide/metadatos/srv/api/records/87ce5171-d713-4eec-a1f3-2b9dd94cad91/formatters/xml"/>
+    <link rel="enclosure" type="application/atom+xml" title="Líneas de declaración SIGC de 2024" href="https://www.fega.gob.es/atom/es.fega.sigpac.ld.2024.xml" hreflang="es"/>
+    <link rel="alternate" type="application/atom+xml" title="Líneas de declaración SIGC de 2024" href="https://www.fega.gob.es/atom/es.fega.sigpac.ld.2024.xml" hreflang="es"/>
+    <georss:polygon>-19 27 -19 44 5 44 5 27 -19 27</georss:polygon>
+    <category term="EPSG:4258" scheme="http://www.opengis.net/def/crs/EPSG/0/4258" label="ETRS89"/>
+  </entry>
+</feed>
