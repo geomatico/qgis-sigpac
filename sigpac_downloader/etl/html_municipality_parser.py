@@ -1,3 +1,9 @@
+# @file        html_municipality_parser.py
+# @author      iCarto <info@icarto.es>
+# @license     MIT License (c) 2025 iCarto
+#  Permission is granted to use, copy, modify, and distribute this software
+# under the MIT License. See the LICENSE file for details.
+
 import html.parser
 import urllib.parse
 from pathlib import Path

@@ -7,5 +7,5 @@ services:
       - DISPLAY=unix$DISPLAY
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ../sigpac_downloader:/root/.local/share/QGIS/QGIS3/profiles/default/python/plugins/
+      - ../sigpac_downloader:/root/.local/share/QGIS/QGIS3/profiles/default/python/plugins/sigpac_downloader
       - ./QGIS3.ini:/root/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini

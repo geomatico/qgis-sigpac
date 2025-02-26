@@ -6,6 +6,8 @@ This plugin allows the user to easily download the plots of every municipality. 
 
 The SIGPAC Downloader uses the ATOM service according to the Inspire Directive.
 
+Special Thanks to [@fpuga](https://github.com/fpuga) from [iCarto](https://icarto.es/) for provide the etl code!
+
 
 ## Make the package to upload to qgis plugins site
 
