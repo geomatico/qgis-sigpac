@@ -26,7 +26,15 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Conjuntos de datos disponibles:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;
+&lt;head/&gt;
+&lt;body&gt;
+	&lt;a href=&quot;https://www.fega.gob.es/orig/&quot;&gt;Web Atom FEGA&lt;/a&gt;
+	&lt;br&gt;
+	&lt;a href=&quot;https://www.fega.gob.es/orig/pdfs/Terminos_de_uso_de_informacion_de_alto_valor_del_SIGC.pdf&quot;&gt;Terminos de uso&lt;/a&gt;
+	&lt;p&gt;Conjuntos de datos disponibles:&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</string>
      </property>
      <property name="textFormat">
       <enum>Qt::AutoText</enum>
