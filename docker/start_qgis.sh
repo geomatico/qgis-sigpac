@@ -1,0 +1,2 @@
+xhost +
+docker compose up

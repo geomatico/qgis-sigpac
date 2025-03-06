@@ -6,11 +6,19 @@
 name=SIGPAC Downloader
 qgisMinimumVersion=3.0
 description=Plugin to download SIGPAC parcels
-version=0.4
+version=0.5
 author=Geomatico
 email=info@geomatico.es
 
-about=The Agricultural Plot Geographic Information System (SIGPAC) enables the geographic identification of plots declared by farmers and livestock farmers in Spain. This plugin allows the user to easily download the plots of every municipality. Prior to that, the Terms&Conditions of the web page must be accepted and a download directory must be selected. The SIGPAC Downloader uses the ATOM service according to the Inspire Directive. It was promoted by Fundación CETEMAS in order to facilitate a practical tool to multiple potential users from forest and agricultural sector.<br>Video tutorial: <a href='https://www.youtube.com/watch?v=98nwmIAHLmQ'>https://www.youtube.com/watch?v=98nwmIAHLmQ</a>
+about=The Agricultural Plot Geographic Information System (SIGPAC) enables the geographic identification of plots
+    declared by farmers and livestock farmers in Spain. This plugin allows the user to easily download the plots of every
+    municipality. Prior  to that, the Terms&Conditions of the web page must be accepted and a download directory
+    must be selected.
+    The SIGPAC Downloader uses the ATOM service according to the Inspire Directive.
+    It was promoted by Fundación CETEMAS in order to facilitate a practical tool to multiple potential users from
+    forest and agricultural sector.
+            <br>Video tutorial: <a href='https://www.youtube.com/watch?v=98nwmIAHLmQ'>https://www.youtube.com/watch?v=98nwmIAHLmQ</a><br>
+    Special Thanks to <a href="https://github.com/fpuga">Francisco Puga</a> from <a href="https://icarto.es/">iCarto</a> for provide the etl code!
 tracker=https://github.com/geomatico/qgis-sigpac/issues
 repository=https://github.com/geomatico/qgis-sigpac
 # End of mandatory metadata

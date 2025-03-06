@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>521</width>
-    <height>472</height>
+    <width>520</width>
+    <height>532</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,10 +26,32 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Puede visualizar las condiciones del servicio &lt;a href=&quot;https://www.fega.gob.es/orig/pdfs/20201215_Licencia_SIGPAC_Servicio_Descarga.pdf&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;aquí.&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;
+&lt;head/&gt;
+&lt;body&gt;
+	&lt;a href=&quot;https://www.fega.gob.es/orig/&quot;&gt;Web Atom FEGA&lt;/a&gt;
+	&lt;br&gt;
+	&lt;a href=&quot;https://www.fega.gob.es/orig/pdfs/Terminos_de_uso_de_informacion_de_alto_valor_del_SIGC.pdf&quot;&gt;Terminos de uso&lt;/a&gt;
+	&lt;p&gt;Conjuntos de datos disponibles:&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</string>
      </property>
      <property name="textFormat">
       <enum>Qt::AutoText</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QComboBox" name="comboBox_data">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Provincia&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
@@ -51,21 +73,14 @@
     </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="comboBox_municipality">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>Ficheros del municipio seleccionado, por años y formatos (&lt;a href='https://www.fega.gob.es/orig/pdfs/202201_Informacion_servicio_descargas_SIGPAC.pdf' target='_blank'&gt;estructura&lt;/a&gt;)</string>
+      <string>Municipio</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="comboBox_files">
+    <widget class="QComboBox" name="comboBox_municipality">
      <property name="enabled">
       <bool>false</bool>
      </property>
