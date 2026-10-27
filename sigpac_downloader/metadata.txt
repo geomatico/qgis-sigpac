@@ -5,6 +5,7 @@
 [general]
 name=SIGPAC Downloader
 qgisMinimumVersion=3.0
+qgisMaximumVersion=4.99
 description=Plugin to download SIGPAC parcels
 version=0.5
 author=Geomatico

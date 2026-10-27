@@ -245,4 +245,4 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     dialog = main_window()
     dialog.show()
-    app.exec_()
+    app.exec()
